@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Diary-Register</title>
+</head>
+<body>
+    <h1>다이어리 등록/수정</h1>
+    <form th:action="@{/diary}" th:object="${requestDto}" method="post">
+        <label for="title">제목</label>
+        <input type="text" th:field="*{title}" id="title"/> <br />
+        <label for="note">내용</label>
+        <textarea cols="80" rows="80" th:field="*{note}" id="note"></textarea> <br />
+        <input type="submit" value="등록" />
+    </form>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Diary-detail</title>
+</head>
+<body>
+    <table th:object="${diary}">
+        <tr>
+            <th>Title</th>
+            <td><b th:text="*{title}"></b></td>
+        </tr>
+        <tr>
+            <th>Note</th>
+            <td th:text="*{note}"></td>
+        </tr>
+        <tr>
+            <th>Created Date</th>
+            <td th:text="${#temporals.format(diary.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+        </tr>
+    </table>
+    <a th:href="@{/diaries}">다이어리 목록</a>
+    <a th:href="@{/diary/edit/__*{no}__}">수정</a>
+    <form th:action="@{/diary/__*{no}__}" method="post">
+        <input type="hidden" name="_method" value="DELETE" />
+        <input type="submit" />
+    </form>
+</body>
+</html>

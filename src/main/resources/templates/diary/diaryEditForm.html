@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Diary-Update</title>
+</head>
+<body>
+    <h1>다이어리 수정</h1>
+    <form th:action="@{/diary/__${diary.no}__}" th:object="${requestDto}" method="post">
+        <input type="hidden" name="_method" value="PUT" />
+        <label for="title">제목</label>
+        <input type="text"id="title" name="title" th:value="${diary.title}"/> <br />
+        <label for="note">내용</label>
+        <textarea cols="80" rows="80" id="note" name="note" th:text="${diary.note}"></textarea> <br />
+        <input type="submit" value="등록" />
+    </form>
+</body>
+</html>

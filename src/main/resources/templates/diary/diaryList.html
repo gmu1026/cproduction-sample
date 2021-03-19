@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Diary-List</title>
+</head>
+<body>
+    <h1>다이어리 목록</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>no</th>
+                <th>Title</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="diary : ${diaries}">
+                <td th:text="${diary.no}"></td>
+                <td>
+                    <a th:href="@{/diary/__${diary.no}__}" th:text="${diary.title}"></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <a th:href="@{/diary}">다이어리 등록</a>
+</body>
+</html>

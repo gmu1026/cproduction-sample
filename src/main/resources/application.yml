@@ -1,0 +1,32 @@
+spring:
+#  profiles:
+#    include: db
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:mem:testdb
+  thymeleaf:
+    cache: false
+    mode: HTML
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+#      naming:
+#        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+#        dialect: org.hibernate.dialect.MariaDB103Dialect
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
