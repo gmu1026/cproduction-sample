@@ -9,6 +9,22 @@ cache:
   - "$HOME/.gradle/caches/"
   - "$HOME/.gradle/wrapper/"
 script: "./gradlew clean build"
+before_deploy:
+  - zip -r test *
+  - mkdir -p deploy
+  - mv test.zip deploy/test.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: diary-deploy-s3
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private
+    local_dir: deploy/diary
+    wait-until-deployed: true
+
 notifications:
   slack:
     secure: WIGz9GDTpSMkjeT6tYkkBmxecB2Yp2ZXyzUfmh4V9n2ZC6C0qxLTfrt8K/omAn85xw4ZzcvTIwyt9RP0ZSvysoQUP8S1khzbinsNs+QBdFmu2FmWOkAYTbQJmnjWUw0QDXu9lB93HAwM+hDVQIHbqBetraEeRZUd1lUnDjjc7iIPR65B98QTqyU3duAOnN5yrxqLszqfSX1lcbSpPBGm2n9ednJ9TCghAA7J8YN11DGF1VctV8Tiok89Gz2M4HrjrCLO5CX15hlMMtrnjmw6qWr3Es6YEsJI+VALuxHfGGyXvXPM6klhQiiHyk8Pn1uj/K+RUIEy3JjVSeEzQocbA/oD7kSsRTyrlTA+ZCuLmGUNBavVEsA8R5OLfNdgXDdfhkGLCI44Wr6pGS45Gz/+gxWmaHCGk7WCubs495N+martT7y1dH7Z/n5xwqXaMRkPq6qviRr4o9HszTDySiFEdBqmdQAy1X9wCVImzYPjfRcANm9fRFCz/3DuaEG14DSA19AiBTI8G79kDos3T3u+8C7E/BZd8hYR4kDJdVloVHrwuDOkS8ZcLhc1CqDZEcQ0W5e6nm5cOlEJM2l4cKU0hIUoL3TUCLDlEqFQ6qLlzQ6XVEceH7Y/czsWp0UnAEoIvU+BzbqynaGrGZw9PBQPyse5nG8x4hmBXks5z6hsv48=
