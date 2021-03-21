@@ -1,7 +1,6 @@
 package net.cproduction.test.web;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.cproduction.test.dto.DiaryEditRequestDto;
 import net.cproduction.test.dto.DiarySaveRequestDto;
 import net.cproduction.test.service.DiaryService;
@@ -12,7 +11,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RequiredArgsConstructor
-@Slf4j
 @Controller
 public class DiaryController {
     private final DiaryService diaryService;
