@@ -1,31 +1,42 @@
 package net.cproduction.test.web;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.cproduction.test.domain.Diary;
 import net.cproduction.test.dto.DiaryEditRequestDto;
+import net.cproduction.test.dto.DiaryFindRequestDto;
 import net.cproduction.test.dto.DiarySaveRequestDto;
 import net.cproduction.test.service.DiaryService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
+@Slf4j
 @Controller
 public class DiaryController {
     private final DiaryService diaryService;
 
     @GetMapping(value = "/")
-    @ResponseBody
-    public String index() {
-        return "main";
-    }
-
-    @GetMapping(value = "/diaries")
-    public ModelAndView showDiaryList() {
+    public ModelAndView showDiaryList(@PageableDefault(sort = { "no" }, direction = Sort.Direction.DESC) Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("diary/diaryList");
 
-        modelAndView.addObject("diaries", diaryService.getDiaryList());
+        Page<Diary> pages = diaryService.getDiaryList(pageable);
+        List<Diary> diaries = pages.stream().collect(Collectors.toList());
+
+        modelAndView.addObject("diaries", diaries);
+        modelAndView.addObject("offset", pages.getTotalPages());
+        modelAndView.addObject("currentPage", pages.getPageable().getPageNumber());
+        modelAndView.addObject("type", "main");
 
         return modelAndView;
     }
@@ -33,6 +44,7 @@ public class DiaryController {
     @GetMapping(value = "/diary")
     public String registerDiaryForm(@ModelAttribute DiarySaveRequestDto requestDto, Model model) {
         model.addAttribute("requestDto", requestDto);
+//        model.addAttribute("tags", tagRepository.findAll());
 
         return "diary/diaryRegisterForm";
     }
@@ -41,7 +53,7 @@ public class DiaryController {
     public String saveDiary(DiarySaveRequestDto requestDto) {
         diaryService.saveDiary(requestDto);
 
-        return "redirect:/diaries";
+        return "redirect:/";
     }
 
     @GetMapping(value = "/diary/{no}")
@@ -74,6 +86,21 @@ public class DiaryController {
     public ModelAndView deleteDiary(@PathVariable("no") long no) {
         diaryService.deleteDiary(no);
 
-        return new ModelAndView(new RedirectView("/diaries"));
+        return new ModelAndView(new RedirectView("/"));
+    }
+
+    @GetMapping(value = "/diaries/search")
+    public ModelAndView findDiary(@ModelAttribute DiaryFindRequestDto requestDto,
+                                  @PageableDefault(sort = { "no" }, direction = Sort.Direction.DESC) Pageable pageable) {
+        ModelAndView modelAndView = new ModelAndView("diary/diaryList");
+
+        Page<Diary> diaries = diaryService.findDiary(requestDto, pageable);
+        modelAndView.addObject("diaries", diaries.stream().collect(Collectors.toList()));
+        modelAndView.addObject("offset",diaries.getTotalPages());
+        modelAndView.addObject("type", "search");
+        modelAndView.addObject("condition", requestDto.getCondition());
+        modelAndView.addObject("keyword", requestDto.getKeyword());
+
+        return modelAndView;
     }
 }

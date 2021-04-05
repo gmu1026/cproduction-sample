@@ -10,9 +10,27 @@
         <input type="hidden" name="_method" value="PUT" />
         <label for="title">제목</label>
         <input type="text"id="title" name="title" th:value="${diary.title}"/> <br />
-        <label for="note">내용</label>
-        <textarea cols="80" rows="80" id="note" name="note" th:text="${diary.note}"></textarea> <br />
+        <label for="editor">내용</label>
+        <textarea id="editor" name="note"></textarea>
         <input type="submit" value="등록" />
     </form>
 </body>
+<script src="https://cdn.ckeditor.com/ckeditor5/26.0.0/classic/ckeditor.js"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    var note = /*[[ ${diary.note} ]]*/;
+
+    /*]]*/
+    let editor;
+    ClassicEditor
+        .create(document.querySelector('#editor'))
+        .then( newEditor => {
+            editor = newEditor;
+            newEditor.setData(note);
+        })
+        .catch(error => {
+            console.error(error);
+        })
+</script>
 </html>

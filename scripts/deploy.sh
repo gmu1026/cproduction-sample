@@ -12,6 +12,7 @@ RUNNING_APP_PID=$(pgrep -fl test | awk '{print $1}')
 if [ -z "$RUNNING_APP_PID"]; then
   echo "NOT RUNNING DIARY APP"
 else
+  echo "PROCESS KILL... PID:$RUNNING_APP_PID"
   kill -15 $RUNNING_APP_PID
   sleep 5
 fi

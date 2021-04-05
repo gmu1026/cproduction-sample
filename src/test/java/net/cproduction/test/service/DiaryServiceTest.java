@@ -2,6 +2,8 @@ package net.cproduction.test.service;
 
 import net.cproduction.test.domain.Diary;
 import net.cproduction.test.domain.DiaryRepository;
+import net.cproduction.test.domain.Tag;
+import net.cproduction.test.domain.TagRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +19,14 @@ class DiaryServiceTest {
     @Autowired
     private DiaryRepository diaryRepository;
 
+    @Autowired
+    private TagRepository tagRepository;
+
     private static final String TITLE = "TEST_TITLE";
 
     private static final String NOTE = "TEST_NOTE";
+
+    private static final String TAG = "TEST_TAG";
 
     private static final String NOT_FOUND_DIARY_MESSAGE = "해당 ID를 가진 다이어리가 존재하지 않습니다.";
 
@@ -27,9 +34,16 @@ class DiaryServiceTest {
     @DisplayName("다이어리_저장_테스트")
     @Test
     void saveDiary() throws Exception {
+        Tag tag = Tag.builder()
+                .name(TAG)
+                .build();
+
+        tagRepository.save(tag);
+
         Diary diary = Diary.builder()
                 .title(TITLE)
                 .note(NOTE)
+                .tag(tag)
                 .build();
 
         Long id = diaryRepository.save(diary).getNo();
@@ -38,6 +52,7 @@ class DiaryServiceTest {
 
         assertThat(diaries.get(0).getTitle()).isEqualTo(TITLE);
         assertThat(diaries.get(0).getNote()).isEqualTo(NOTE);
+        assertThat(diaries.get(0).getTag().getName()).isEqualTo(TAG);
     }
 
     @Transactional

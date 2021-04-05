@@ -6,22 +6,41 @@
 </head>
 <body>
     <h1>다이어리 목록</h1>
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>no</th>
+                <th>Tag</th>
                 <th>Title</th>
             </tr>
         </thead>
         <tbody>
             <tr th:each="diary : ${diaries}">
                 <td th:text="${diary.no}"></td>
+                <td th:text="${diary.tag.name}"></td>
                 <td>
                     <a th:href="@{/diary/__${diary.no}__}" th:text="${diary.title}"></a>
                 </td>
             </tr>
         </tbody>
     </table>
+    <ul class="pagination" th:with="start=${1}, last=${offset}">
+        <li th:each="page: ${#numbers.sequence(start,last)}" class="page-item">
+            <a th:text="${page}" class="page-link" th:if="${type == 'main'}" th:href="@{/diaries?page=__${page}__}"></a>
+            <a th:text="${page}" class="page-link" th:if="${type == 'search'}" th:href="@{/diaries/search?condition=__${condition}__&keyword=__${keyword}__&page=__${page}__}"></a>
+        </li>
+    </ul>
+    <form th:action="@{/diaries/search}" method="get">
+        <select name="condition">
+            <option value="title">Title</option>
+            <option value="writer">Writer</option>
+            <option value="contents">Contents</option>
+        </select>
+        <input type="text" name="keyword" />
+        <input type="submit" value="Find">
+    </form>
     <a th:href="@{/diary}">다이어리 등록</a>
 </body>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 </html>
