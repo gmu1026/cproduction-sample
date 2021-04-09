@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.cproduction.test.domain.Diary;
 import net.cproduction.test.dto.DiaryEditRequestDto;
 import net.cproduction.test.dto.DiaryFindRequestDto;
+import net.cproduction.test.dto.DiaryListResponseDto;
 import net.cproduction.test.dto.DiarySaveRequestDto;
 import net.cproduction.test.service.DiaryService;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,12 @@ public class DiaryController {
     private final DiaryService diaryService;
 
     @GetMapping(value = "/")
+    @ResponseBody
+    public Page<DiaryListResponseDto> getDiaryList(Pageable pageable) {
+        return diaryService.getDiaries(pageable);
+    }
+
+    @GetMapping(value = "/diaries")
     public ModelAndView showDiaryList(@PageableDefault(sort = { "no" }, direction = Sort.Direction.DESC) Pageable pageable) {
         ModelAndView modelAndView = new ModelAndView("diary/diaryList");
 

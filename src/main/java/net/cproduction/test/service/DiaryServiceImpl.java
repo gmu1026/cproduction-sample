@@ -7,12 +7,16 @@ import net.cproduction.test.domain.Tag;
 import net.cproduction.test.domain.TagRepository;
 import net.cproduction.test.dto.DiaryEditRequestDto;
 import net.cproduction.test.dto.DiaryFindRequestDto;
+import net.cproduction.test.dto.DiaryListResponseDto;
 import net.cproduction.test.dto.DiarySaveRequestDto;
 import net.cproduction.test.util.LogExecutionTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -74,5 +78,12 @@ public class DiaryServiceImpl implements DiaryService {
         } else {
             return null;
         }
+    }
+
+    @LogExecutionTime(name = "Paging_diaries")
+    @Transactional(readOnly = true)
+    @Override
+    public Page<DiaryListResponseDto> getDiaries(Pageable pageable) {
+        return diaryRepository.findAllDiary(pageable);
     }
 }
